@@ -22,13 +22,17 @@ export class NegociacaoController {
 
   public adiciona(): void{
     const negociacao = this.criaNegociacao();
-    if(negociacao.data.getDay() > this.DOMINGO && negociacao.data.getDay() < this.SABADO) {
-      this.negociacoes.adiciona(negociacao);
-      this.limparFormulario();
-      this.atualizaView();
-    } else {
-      this.mensagemView.update('Apenas negociacoes em dias uteis sao aceitas')
-    }
+    if(!this.ehDiaUtil(negociacao.data)) {
+      this.mensagemView.update('Apenas negociacoes em dias uteis sao aceitas');
+      return
+    } 
+    this.negociacoes.adiciona(negociacao);
+    this.limparFormulario();
+    this.atualizaView();
+  }
+
+  private ehDiaUtil(data:Date){
+    return data.getDay() > this.DOMINGO && data.getDay() < this.SABADO
   }
 
   private criaNegociacao(): Negociacao{
